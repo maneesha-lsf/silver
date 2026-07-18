@@ -28,6 +28,12 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{/* Stable Service name so Postfix resolves the rspamd milter (decoupled from the
+release-prefixed fullname, matching raven's pattern). */}}
+{{- define "rspamd.serviceName" -}}
+{{- (((.Values.global).serviceNames).rspamd) | default "rspamd" -}}
+{{- end }}
+
 {{/*
 Common labels
 */}}

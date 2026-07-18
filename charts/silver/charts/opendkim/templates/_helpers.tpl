@@ -19,6 +19,12 @@
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/* Stable Service name so Postfix resolves the DKIM milter (decoupled from the
+release-prefixed fullname, matching raven's pattern). */}}
+{{- define "opendkim.serviceName" -}}
+{{- (((.Values.global).serviceNames).opendkim) | default "opendkim" -}}
+{{- end -}}
+
 {{- define "opendkim.labels" -}}
 helm.sh/chart: {{ include "opendkim.chart" . }}
 app.kubernetes.io/name: {{ include "opendkim.name" . }}

@@ -28,6 +28,11 @@ service:
   type: ClusterIP
   annotations: {}
 
+# Bind imap/imaps (143/993) on the node so external mail clients can reach them.
+# Single-node only (one pod per host port). Mirrors postfix.hostPort.
+hostPort:
+  enabled: false
+
 # Listener ports. socketmap (9100) is what Postfix queries for user/alias lookups.
 ports:
   imap: 143

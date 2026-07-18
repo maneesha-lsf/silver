@@ -68,8 +68,18 @@ spec:
             - name: TOKEN_REFRESH_SECONDS
               value: {{ .Values.env.tokenRefreshSeconds | quote }}
           ports:
-            - {name: imap,      containerPort: {{ .Values.ports.imap }}}
-            - {name: imaps,     containerPort: {{ .Values.ports.imaps }}}
+            # imap/imaps bind hostPort so external mail clients reach them on the
+            # node IP (single-node, one pod per host port). Mirrors postfix.
+            - name: imap
+              containerPort: {{ .Values.ports.imap }}
+              {{- if .Values.hostPort.enabled }}
+              hostPort: {{ .Values.ports.imap }}
+              {{- end }}
+            - name: imaps
+              containerPort: {{ .Values.ports.imaps }}
+              {{- if .Values.hostPort.enabled }}
+              hostPort: {{ .Values.ports.imaps }}
+              {{- end }}
             - {name: lmtp,      containerPort: {{ .Values.ports.lmtp }}}
             - {name: sasl,      containerPort: {{ .Values.ports.sasl }}}
             - {name: socketmap, containerPort: {{ .Values.ports.socketmap }}}
