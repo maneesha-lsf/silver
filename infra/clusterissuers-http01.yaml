@@ -1,0 +1,41 @@
+# Let's Encrypt ClusterIssuers using the HTTP-01 solver (Traefik ingress).
+#
+# Use this instead of infra/bootstrap.sh when your DNS is NOT on Cloudflare.
+# HTTP-01 validates over port 80 via k3s's built-in Traefik, so it needs no DNS
+# provider API token and works on any DNS provider. Requires: the mail host's A
+# record resolving to the node, and inbound port 80 reachable.
+#
+#   kubectl apply -f infra/clusterissuers-http01.yaml
+#   kubectl get clusterissuer   # le-staging, le-prod -> READY=True
+#
+# Update the email before applying.
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: le-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: maneesha@opensource.lk
+    privateKeySecretRef:
+      name: le-staging-account-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: traefik
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: le-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: maneesha@opensource.lk
+    privateKeySecretRef:
+      name: le-prod-account-key
+    solvers:
+      - http01:
+          ingress:
+            ingressClassName: traefik

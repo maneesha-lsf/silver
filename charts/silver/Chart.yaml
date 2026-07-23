@@ -37,6 +37,6 @@ dependencies:
   # Thunder identity server (upstream OCI chart). Mirrors the docker-compose
   # `thunder`/`thunder-setup`/`thunder-db-init` services.
   - name: thunder
-    version: 0.32.0
+    version: 0.35.0
     repository: oci://ghcr.io/asgardeo/helm-charts
     condition: thunder.enabled

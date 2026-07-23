@@ -23,7 +23,7 @@ global:
   # not just the umbrella's certificate.yaml.
   tls:
     enabled: true
-    issuer: le-staging # switch to le-prod once staging works
+    issuer: le-prod # staging validated; production trusted certs
     renewBefore: "720h" # renew 30 days before expiry
     # Empty -> derives [ mail.<domain>, <domain> ] from global.domain, so the
     # cert Secret postfix mounts (silver.tlsSecretName) always exists. Override
@@ -51,6 +51,109 @@ rspamd:
 
 raven:
   enabled: true
+  # Bind IMAP/IMAPS (143/993) on the node so external mail clients can reach them
+  # (single-node; mirrors postfix.hostPort). Without this the Service is ClusterIP-only.
+  hostPort:
+    enabled: true
+  # Serve the LE mail cert on IMAPS. Point straight at the cert-manager Secret and
+  # remap tls.crt/tls.key -> fullchain.pem/privkey.pem (certManagerKeys). Auto-renews
+  # with cert-manager; no hand-copied secret. (Restart raven to pick up a renewed cert
+  # unless raven hot-reloads.)
+  tls:
+    existingSecret: mail-silver-opensource-lk-tls
+    certManagerKeys: true
+  # Thunder public host raven validates OAUTHBEARER tokens against. Bare domain
+  # (matches docker-compose convention), so issuer/JWKS = https://silver.opensource.lk:8090.
+  # host also = the public domain: raven's credential-auth POST goes over HTTPS and must
+  # hit a name the LE cert covers (silver.opensource.lk), not the in-cluster service name.
+  # In-cluster this hairpins via the thunder-lb (verified reachable from the raven pod).
+  thunder:
+    host: silver.opensource.lk
+    publicHost: silver.opensource.lk
+    # CONSOLE app id (has system:ou:view scope). raven needs it to get a token for
+    # OU->domain resolution during login. Without it, raven falls back to reading
+    # `docker logs thunder-setup` (compose-only, no Docker socket in k8s) and login fails
+    # with "unable to resolve expected IdP domain". Bootstrap-created; from configdb.
+    applicationId: "019f89a8-370a-7b64-891b-a0c6d73e7563"
+    # System identity for OU resolution: authenticate as admin (has system:ou:view)
+    # to read the logging-in user's OU domain. Password from the bootstrap admin secret.
+    systemUsername: admin
+    systemPasswordSecret: silver-thunder-admin
+    systemPasswordSecretKey: password
+
+thunder:
+  enabled: true
+  # SQLite mode (matches the docker-compose deployment). The chart's setup-job
+  # initContainer seeds the bundled SQLite DBs into a PVC, same as compose's
+  # thunder-db-init. No external Postgres needed. Single pod only.
+  deployment:
+    replicaCount: 1
+    securityContext:
+      readOnlyRootFilesystem: false   # required when SQLite is the database
+  # HPA defaults to enabled in the thunder chart (min 1 / max 10). SQLite is
+  # single-writer: a 2nd pod sharing the one RWO PVC locks writes and breaks
+  # user creation ("failed to create user"). Must stay off while on SQLite.
+  hpa:
+    enabled: false
+  persistence:
+    enabled: true
+    size: 1Gi
+  configuration:
+    database:
+      config:
+        type: sqlite
+      runtime:
+        type: sqlite
+      user:
+        type: sqlite
+    consent:
+      database:
+        type: sqlite
+    # OAuth wiring so raven's OAUTHBEARER validation matches. publicUrl becomes the
+    # JWT issuer (= raven oauth_issuer_url https://silver.opensource.lk:8090); audience
+    # must match the app raven authenticates as (EMAIL_APP, per compose bootstrap).
+    server:
+      publicUrl: "https://silver.opensource.lk:8090"
+    gateClient:
+      hostname: "silver.opensource.lk"
+      port: 8090   # gate UI served by Thunder on :8090 (via the thunder-lb), not :443
+    jwt:
+      audience: "EMAIL_APP"
+  # NOTE: do NOT enable declarativeResources — it flips Thunder into declarative mode
+  # (declarative_resources.enabled=true), which makes the imperative bootstrap scripts
+  # fail (DCR-1002 "update not permitted"). The compose/OpenGovMail-config deployment.yaml
+  # has no declarative_resources block for the same reason. Serving the LE cert on :8090
+  # is handled separately (see thunder-lb / cert follow-up), not via declarativeResources.
+  # Bootstrap the admin user + CONSOLE app (01) and the EMAIL_APP SPA app + sample
+  # users (02) that raven authenticates against. Scripts live in the umbrella at
+  # files/thunder-bootstrap/ and are rendered into the ConfigMap by
+  # templates/thunder-bootstrap-configmap.yaml (name = <release>-thunder-bootstrap).
+  bootstrap:
+    configMap:
+      name: silver-thunder-bootstrap
+      files:
+        - 01-default-resources.sh
+        - 02-sample-resources.sh
+  setup:
+    # setup.sh runs the main + consent servers plus the bootstrap scripts in one pod;
+    # the chart default 100Mi OOM-kills the consent server ("exited unexpectedly").
+    resources:
+      limits:
+        cpu: 500m
+        memory: 768Mi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+    env:
+      - name: THUNDER_ADMIN_USERNAME
+        value: admin
+    # Admin password from a Secret created out-of-band (kubectl), not committed:
+    #   kubectl create secret generic silver-thunder-admin -n silver \
+    #     --from-literal=password=<STRONG_PASSWORD>
+    secretEnv:
+      - name: THUNDER_ADMIN_PASSWORD
+        secretName: silver-thunder-admin
+        secretKey: password
 
 seaweedfs:
   enabled: true

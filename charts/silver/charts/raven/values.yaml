@@ -53,6 +53,11 @@ persistence:
 tls:
   enabled: true
   existingSecret: ""
+  # Set true when existingSecret is a cert-manager Secret (tls.crt/tls.key): the mount
+  # remaps those keys to the fullchain.pem/privkey.pem filenames Raven expects, so the
+  # cert-manager Secret can be used directly (auto-renews). Leave false for the chart's
+  # self-signed Secret or a secret already using fullchain.pem/privkey.pem.
+  certManagerKeys: false
   mountPath: /certs
 
 # Thunder auth backend (external — not charted here). Raven starts without it;
@@ -68,6 +73,13 @@ thunder:
   # (a compose-only hack needing the docker socket). Set this to skip that path.
   # Empty is fine without Thunder — the group resolver just fails gracefully.
   applicationId: ""
+  # System identity raven uses to obtain a system-scoped assertion for OU->domain
+  # resolution during login (IDP_SYSTEM_USERNAME / IDP_SYSTEM_PASSWORD; raven defaults
+  # admin/admin). Needs a user with system:ou:view (the bootstrap admin). Password is
+  # read from a Secret so it isn't committed.
+  systemUsername: ""           # e.g. admin
+  systemPasswordSecret: ""     # Secret name holding the admin password
+  systemPasswordSecretKey: password
 
 # S3-compatible blob storage for attachments. Defaults wire to the in-cluster
 # seaweedfs subchart. Credentials come from global.s3.* (shared with seaweedfs);

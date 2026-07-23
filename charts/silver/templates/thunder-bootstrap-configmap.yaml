@@ -1,0 +1,25 @@
+{{- if .Values.thunder.enabled }}
+{{- /*
+Thunder bootstrap scripts (01-default-resources.sh: admin user, CONSOLE app, roles;
+02-sample-resources.sh: EMAIL_APP SPA application + sample users). Sourced from
+charts/silver/files/thunder-bootstrap/. Referenced by thunder.bootstrap.configMap so the
+Thunder setup-job mounts them into /opt/thunder/bootstrap and runs them (common.sh comes
+from the image). Must be a pre-install hook (weight < the setup-job's -5) so it exists
+before the setup-job pod starts.
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-thunder-bootstrap
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "silver.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "-12"
+data:
+{{- range $path, $_ := .Files.Glob "files/thunder-bootstrap/*.sh" }}
+  {{ base $path }}: |
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}
+{{- end }}

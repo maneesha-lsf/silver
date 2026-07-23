@@ -63,6 +63,17 @@ spec:
             - name: APPLICATION_ID
               value: {{ .Values.thunder.applicationId | quote }}
             {{- end }}
+            {{- if .Values.thunder.systemUsername }}
+            - name: IDP_SYSTEM_USERNAME
+              value: {{ .Values.thunder.systemUsername | quote }}
+            {{- end }}
+            {{- if .Values.thunder.systemPasswordSecret }}
+            - name: IDP_SYSTEM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.thunder.systemPasswordSecret }}
+                  key: {{ .Values.thunder.systemPasswordSecretKey | default "password" }}
+            {{- end }}
             - name: CACHE_TTL_SECONDS
               value: {{ .Values.env.cacheTtlSeconds | quote }}
             - name: TOKEN_REFRESH_SECONDS
@@ -111,6 +122,16 @@ spec:
         - name: certs
           secret:
             secretName: {{ include "raven.certSecretName" . }}
+            {{- if .Values.tls.certManagerKeys }}
+            # Remap cert-manager's tls.crt/tls.key to the fullchain.pem/privkey.pem
+            # filenames Raven expects, so a cert-manager Secret can be mounted directly
+            # (auto-renews; no hand-copied secret).
+            items:
+              - key: tls.crt
+                path: fullchain.pem
+              - key: tls.key
+                path: privkey.pem
+            {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

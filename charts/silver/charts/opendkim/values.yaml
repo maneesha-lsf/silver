@@ -54,7 +54,7 @@ trustedHosts:
   additional: []
 
 domains:
-  - domain: example.com
+  - domain: silver.opensource.lk
     dkimSelector: mail
     dkimKeySize: 2048
 
