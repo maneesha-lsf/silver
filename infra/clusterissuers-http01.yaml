@@ -5,10 +5,20 @@
 # provider API token and works on any DNS provider. Requires: the mail host's A
 # record resolving to the node, and inbound port 80 reachable.
 #
-#   kubectl apply -f infra/clusterissuers-http01.yaml
+# ACME_EMAIL is where Let's Encrypt sends expiry and renewal notices, and it
+# identifies the ACME account. It is deliberately NOT committed — substitute it
+# at apply time so no deployment inherits someone else's address.
+#
+# Apply with the guard, so a forgotten variable aborts before kubectl runs:
+#
+#   : "${ACME_EMAIL:?set ACME_EMAIL to the address Let's Encrypt should contact}" \
+#     && envsubst < infra/clusterissuers-http01.yaml | kubectl apply -f -
+#
 #   kubectl get clusterissuer   # le-staging, le-prod -> READY=True
 #
-# Update the email before applying.
+# The guard matters: cert-manager treats acme.email as OPTIONAL, so a bare
+# `envsubst | kubectl apply` with ACME_EMAIL unset substitutes an empty string and
+# is accepted — registering an ACME account with no contact address and no warning.
 ---
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
@@ -17,7 +27,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: maneesha@opensource.lk
+    email: ${ACME_EMAIL}
     privateKeySecretRef:
       name: le-staging-account-key
     solvers:
@@ -32,7 +42,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: maneesha@opensource.lk
+    email: ${ACME_EMAIL}
     privateKeySecretRef:
       name: le-prod-account-key
     solvers:

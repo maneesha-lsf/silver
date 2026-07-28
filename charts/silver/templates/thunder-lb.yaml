@@ -6,11 +6,15 @@ The vendored asgardeo Thunder chart's own Service is hardcoded ClusterIP, but Th
 OAuth issuer/JWKS is published at https://<domain>:8090 — reachable by BOTH raven
 (in-cluster JWKS fetch) and the external mail client (OAuth token endpoint). On k3s,
 klipper/servicelb binds this port on the node (firewall already opens 8090).
+
+Name is release-independent, matching the global.serviceNames convention used by
+raven/rspamd/opendkim/postfix, so in-cluster references don't have to track the
+release name.
 */}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}-thunder-lb
+  name: {{ (((.Values.global).serviceNames).thunderLb) | default "thunder-lb" }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "silver.labels" . | nindent 4 }}
