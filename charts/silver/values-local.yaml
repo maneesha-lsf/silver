@@ -33,12 +33,15 @@ thunder:
       # publicUrl disagree, OAuth fails with "Invalid redirect URI".
       - name: THUNDER_PUBLIC_URL
         value: "https://localhost:8090"
-    # Admin password is sourced from a Secret, not stored in values. Create it
-    # before installing:
-    #   kubectl create secret generic thunder-admin-credentials \
-    #     --namespace silver --from-literal=password='<your-password>'
+    # Admin password comes from the Secret the umbrella generates
+    # (templates/thunder-admin-secret.yaml); no kubectl step is needed. The name
+    # must equal global.thunderAdmin.secretName and raven.thunder.systemPasswordSecret
+    # or templates/thunder-admin-secret.yaml fails the render. Read the generated
+    # value with:
+    #   kubectl get secret silver-thunder-admin -n silver \
+    #     -o jsonpath='{.data.password}' | base64 -d
     secretEnv:
       - name: THUNDER_ADMIN_PASSWORD
-        secretName: thunder-admin-credentials
+        secretName: silver-thunder-admin
         secretKey: password
         optional: false

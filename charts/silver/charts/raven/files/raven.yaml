@@ -1,5 +1,5 @@
 domain: {{ include "raven.domain" . }}
-auth_server_url: https://{{ .Values.thunder.host }}:{{ .Values.thunder.port }}/auth/credentials/authenticate
+auth_server_url: https://{{ include "raven.thunderHost" . }}:{{ .Values.thunder.port }}/auth/credentials/authenticate
 
 # OAUTHBEARER token validation (RFC 7628). iss must match this public host.
 oauth_issuer_url: "https://{{ include "raven.thunderPublicHost" . }}:{{ .Values.thunder.publicPort }}"

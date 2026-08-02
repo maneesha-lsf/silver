@@ -14,6 +14,6 @@ spec:
         - sh
         - -c
         - >-
-          echo QUIT | nc -w 5 {{ include "postfix.fullname" . }} {{ .Values.service.ports.smtp }} &&
-          echo QUIT | nc -w 5 {{ include "postfix.fullname" . }} {{ .Values.service.ports.submission }}
+          echo QUIT | nc -w 5 {{ include "postfix.serviceName" . }} {{ .Values.service.ports.smtp }} &&
+          echo QUIT | nc -w 5 {{ include "postfix.serviceName" . }} {{ .Values.service.ports.submission }}
   restartPolicy: Never

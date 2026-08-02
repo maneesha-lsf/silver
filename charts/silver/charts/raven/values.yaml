@@ -28,6 +28,11 @@ service:
   type: ClusterIP
   annotations: {}
 
+# Bind imap/imaps (143/993) on the node so external mail clients can reach them.
+# Single-node only (one pod per host port). Mirrors postfix.hostPort.
+hostPort:
+  enabled: false
+
 # Listener ports. socketmap (9100) is what Postfix queries for user/alias lookups.
 ports:
   imap: 143
@@ -48,21 +53,37 @@ persistence:
 tls:
   enabled: true
   existingSecret: ""
+  # Set true when existingSecret is a cert-manager Secret (tls.crt/tls.key): the mount
+  # remaps those keys to the fullchain.pem/privkey.pem filenames Raven expects, so the
+  # cert-manager Secret can be used directly (auto-renews). Leave false for the chart's
+  # self-signed Secret or a secret already using fullchain.pem/privkey.pem.
+  certManagerKeys: false
   mountPath: /certs
 
 # Thunder auth backend (external — not charted here). Raven starts without it;
 # only IMAP/SASL login fails until Thunder is reachable at these addresses.
 thunder:
-  host: thunder
+  # Both default to the bare <global.domain>. Thunder serves the <domain>
+  # certificate on :8090 and publishes its issuer as https://<domain>:8090, so
+  # mail.<domain> and the in-cluster Service name are not SANs and raven (which
+  # cannot skip TLS verification) would fail against either.
+  host: ""           # default <domain>
   port: 8090
   # Public issuer/JWKS host for OAuth token validation (JWT iss must match).
-  publicHost: ""     # default mail.<domain>
+  publicHost: ""     # default <domain>
   publicPort: 8090
   audience: EMAIL_APP
   # Raven otherwise tries to read the app ID from `docker logs thunder-setup`
   # (a compose-only hack needing the docker socket). Set this to skip that path.
   # Empty is fine without Thunder — the group resolver just fails gracefully.
   applicationId: ""
+  # System identity raven uses to obtain a system-scoped assertion for OU->domain
+  # resolution during login (IDP_SYSTEM_USERNAME / IDP_SYSTEM_PASSWORD; raven defaults
+  # admin/admin). Needs a user with system:ou:view (the bootstrap admin). Password is
+  # read from a Secret so it isn't committed.
+  systemUsername: ""           # e.g. admin
+  systemPasswordSecret: ""     # Secret name holding the admin password
+  systemPasswordSecretKey: password
 
 # S3-compatible blob storage for attachments. Defaults wire to the in-cluster
 # seaweedfs subchart. Credentials come from global.s3.* (shared with seaweedfs);

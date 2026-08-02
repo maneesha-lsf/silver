@@ -56,20 +56,41 @@ spec:
             - name: SOCKETMAP_PORT
               value: {{ .Values.ports.socketmap | quote }}
             - name: THUNDER_HOST
-              value: {{ .Values.thunder.host | quote }}
+              value: {{ include "raven.thunderHost" . | quote }}
             - name: THUNDER_PORT
               value: {{ .Values.thunder.port | quote }}
             {{- if .Values.thunder.applicationId }}
             - name: APPLICATION_ID
               value: {{ .Values.thunder.applicationId | quote }}
             {{- end }}
+            {{- if .Values.thunder.systemUsername }}
+            - name: IDP_SYSTEM_USERNAME
+              value: {{ .Values.thunder.systemUsername | quote }}
+            {{- end }}
+            {{- if .Values.thunder.systemPasswordSecret }}
+            - name: IDP_SYSTEM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.thunder.systemPasswordSecret }}
+                  key: {{ .Values.thunder.systemPasswordSecretKey | default "password" }}
+            {{- end }}
             - name: CACHE_TTL_SECONDS
               value: {{ .Values.env.cacheTtlSeconds | quote }}
             - name: TOKEN_REFRESH_SECONDS
               value: {{ .Values.env.tokenRefreshSeconds | quote }}
           ports:
-            - {name: imap,      containerPort: {{ .Values.ports.imap }}}
-            - {name: imaps,     containerPort: {{ .Values.ports.imaps }}}
+            # imap/imaps bind hostPort so external mail clients reach them on the
+            # node IP (single-node, one pod per host port). Mirrors postfix.
+            - name: imap
+              containerPort: {{ .Values.ports.imap }}
+              {{- if .Values.hostPort.enabled }}
+              hostPort: {{ .Values.ports.imap }}
+              {{- end }}
+            - name: imaps
+              containerPort: {{ .Values.ports.imaps }}
+              {{- if .Values.hostPort.enabled }}
+              hostPort: {{ .Values.ports.imaps }}
+              {{- end }}
             - {name: lmtp,      containerPort: {{ .Values.ports.lmtp }}}
             - {name: sasl,      containerPort: {{ .Values.ports.sasl }}}
             - {name: socketmap, containerPort: {{ .Values.ports.socketmap }}}
@@ -101,6 +122,16 @@ spec:
         - name: certs
           secret:
             secretName: {{ include "raven.certSecretName" . }}
+            {{- if .Values.tls.certManagerKeys }}
+            # Remap cert-manager's tls.crt/tls.key to the fullchain.pem/privkey.pem
+            # filenames Raven expects, so a cert-manager Secret can be mounted directly
+            # (auto-renews; no hand-copied secret).
+            items:
+              - key: tls.crt
+                path: fullchain.pem
+              - key: tls.key
+                path: privkey.pem
+            {{- end }}
         {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

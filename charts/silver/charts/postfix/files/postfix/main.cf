@@ -103,6 +103,9 @@ virtual_alias_maps = socketmap:inet:{{ .Values.global.serviceNames.raven }}:9100
 # This ensures reject_unlisted_recipient properly checks virtual_mailbox_maps
 virtual_mailbox_base = /var/mail/virtual
 
+# Resolve the raven service via nsswitch (files+dns); the default dns-only
+# lookup doesn't append the cluster search domain to the short service name.
+lmtp_host_lookup = native
 virtual_transport = lmtp:[{{ .Values.global.serviceNames.raven }}]:24
 milter_protocol = 6
 milter_default_action = accept

@@ -53,10 +53,14 @@ trustedHosts:
     - 10.0.0.0/8
   additional: []
 
-domains:
-  - domain: example.com
-    dkimSelector: mail
-    dkimKeySize: 2048
+# Domains to sign for. Empty derives a single entry from global.domain, so a
+# one-command install signs for the domain being deployed. List explicitly only
+# to sign for several domains or to vary the selector/key size:
+#   domains:
+#     - domain: example.com
+#       dkimSelector: mail
+#       dkimKeySize: 2048
+domains: []
 
 opendkimConf: |
   Syslog                  yes

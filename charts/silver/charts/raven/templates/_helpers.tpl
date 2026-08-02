@@ -58,9 +58,37 @@ global.s3.secretKey in prod.
 {{- (((.Values.global).s3).secretKey) | default .Values.blobStorage.secretKey | default (printf "%s-silver-seaweedfs-s3" .Release.Name | sha256sum | trunc 40) }}
 {{- end }}
 
-{{/* Thunder public host for OAuth issuer/JWKS (defaults to mail.<domain>). */}}
+{{/*
+Thunder hosts. Both default to the BARE domain, not mail.<domain>: Thunder serves
+the <domain> certificate on :8090 and publishes its OAuth issuer as
+https://<domain>:8090, so mail.<domain> is not a SAN and TLS verification fails.
+
+Both are the public name rather than the in-cluster Service name because raven
+speaks HTTPS with no skip-verify or custom-CA option, and silver-thunder-service
+is not on the cert either. In-cluster calls therefore hairpin via the node's
+external IP (see finding #7).
+*/}}
+{{- define "raven.thunderHost" -}}
+{{- .Values.thunder.host | default (include "raven.domain" .) }}
+{{- end }}
+
 {{- define "raven.thunderPublicHost" -}}
-{{- .Values.thunder.publicHost | default (include "raven.mailHostname" .) }}
+{{- .Values.thunder.publicHost | default (include "raven.domain" .) }}
+{{- end }}
+
+{{/*
+cert-manager TLS Secret for IMAPS. Mirrors the umbrella's silver.tlsSecretName
+(charts/silver/templates/_helpers.tpl) rather than calling it, so this subchart
+still renders standalone — the same reason raven.domain/raven.mailHostname are
+duplicated above.
+
+The dots->dashes naming rule exists in three places and they MUST agree:
+  charts/silver/templates/_helpers.tpl   (silver.tlsSecretName)
+  charts/silver/templates/certificate.yaml (the Certificate's secretName)
+  here
+*/}}
+{{- define "raven.tlsSecretName" -}}
+{{- ((.Values.global).tlsSecretName) | default (printf "%s-tls" (include "raven.mailHostname" . | replace "." "-")) }}
 {{- end }}
 
 {{/* Secret holding the rendered raven.yaml + delivery.yaml (contain S3 key). */}}
@@ -68,7 +96,19 @@ global.s3.secretKey in prod.
 {{- printf "%s-config" (include "raven.fullname" .) }}
 {{- end }}
 
-{{/* Secret mounted at /certs (generated self-signed, or a provided one). */}}
+{{/*
+Secret mounted at /certs. Precedence:
+  tls.existingSecret -> global.tlsSecretName -> mail-<domain-dashed>-tls -> self-signed
+The cert-manager name is preferred over the generated self-signed Secret so a
+one-command install with global.domain set picks up the real cert automatically.
+Falls back to self-signed only when there is no global.domain at all (standalone).
+*/}}
 {{- define "raven.certSecretName" -}}
-{{- .Values.tls.existingSecret | default (printf "%s-certs" (include "raven.fullname" .)) }}
+{{- if .Values.tls.existingSecret }}
+{{- .Values.tls.existingSecret }}
+{{- else if and (((.Values.global).tls).enabled) ((.Values.global).domain) }}
+{{- include "raven.tlsSecretName" . }}
+{{- else }}
+{{- printf "%s-certs" (include "raven.fullname" .) }}
+{{- end }}
 {{- end }}
