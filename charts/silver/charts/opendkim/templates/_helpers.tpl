@@ -25,6 +25,19 @@ release-prefixed fullname, matching raven's pattern). */}}
 {{- (((.Values.global).serviceNames).opendkim) | default "opendkim" -}}
 {{- end -}}
 
+{{/*
+The list of domains to sign for. Empty (the default) derives a single entry from
+global.domain, so a one-command install signs for the domain being deployed
+instead of a value baked into this chart. Override `domains` to sign for several.
+*/}}
+{{- define "opendkim.domains" -}}
+{{- if .Values.domains -}}
+{{- toJson .Values.domains -}}
+{{- else -}}
+{{- toJson (list (dict "domain" (required "opendkim: set global.domain, or list opendkim.domains explicitly" ((.Values.global).domain)))) -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "opendkim.labels" -}}
 helm.sh/chart: {{ include "opendkim.chart" . }}
 app.kubernetes.io/name: {{ include "opendkim.name" . }}

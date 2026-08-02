@@ -63,10 +63,14 @@ tls:
 # Thunder auth backend (external — not charted here). Raven starts without it;
 # only IMAP/SASL login fails until Thunder is reachable at these addresses.
 thunder:
-  host: thunder
+  # Both default to the bare <global.domain>. Thunder serves the <domain>
+  # certificate on :8090 and publishes its issuer as https://<domain>:8090, so
+  # mail.<domain> and the in-cluster Service name are not SANs and raven (which
+  # cannot skip TLS verification) would fail against either.
+  host: ""           # default <domain>
   port: 8090
   # Public issuer/JWKS host for OAuth token validation (JWT iss must match).
-  publicHost: ""     # default mail.<domain>
+  publicHost: ""     # default <domain>
   publicPort: 8090
   audience: EMAIL_APP
   # Raven otherwise tries to read the app ID from `docker logs thunder-setup`
