@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # This script initializes certbot certificates with wildcard support
-# for ALL domains defined in silver.yaml
+# for ALL domains defined in opengovmail.yaml
 #
 
 set -euo pipefail
@@ -9,14 +9,14 @@ set -euo pipefail
 # --- Paths ---
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-readonly SILVER_YAML_FILE="${ROOT_DIR}/../conf/silver.yaml"
-readonly LETSENCRYPT_PATH="${ROOT_DIR}/silver-config/certbot/keys"
+readonly OPENGOVMAIL_YAML_FILE="${ROOT_DIR}/../conf/opengovmail.yaml"
+readonly LETSENCRYPT_PATH="${ROOT_DIR}/opengovmail-config/certbot/keys"
 
-# Extract domains from silver.yaml
-DOMAINS=$(grep '^\s*-\s*domain:' "${SILVER_YAML_FILE}" | sed 's/.*domain:\s*//' | xargs)
+# Extract domains from opengovmail.yaml
+DOMAINS=$(grep '^\s*-\s*domain:' "${OPENGOVMAIL_YAML_FILE}" | sed 's/.*domain:\s*//' | xargs)
 
 if [ -z "$DOMAINS" ]; then
-    echo "❌ Error: No domains found in ${SILVER_YAML_FILE}"
+    echo "❌ Error: No domains found in ${OPENGOVMAIL_YAML_FILE}"
     exit 1
 fi
 

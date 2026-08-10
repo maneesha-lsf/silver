@@ -8,17 +8,17 @@ set -euo pipefail # Exit on error, undefined vars, or failed pipe
 
 # --- Paths ---
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT_DIR="$(dirname "$SCRIPT_DIR")"       # /root/silver/services
-GEN_DIR="${ROOT_DIR}/silver-config/raven" # Base path
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"       # /root/opengovmail/services
+GEN_DIR="${ROOT_DIR}/opengovmail-config/raven" # Base path
 
-CONFIG_FILE="${ROOT_DIR}/../conf/silver.yaml"
+CONFIG_FILE="${ROOT_DIR}/../conf/opengovmail.yaml"
 OUTPUT_FILE="${GEN_DIR}/conf/raven.yaml"
 DELIVERY_FILE="${GEN_DIR}/conf/delivery.yaml"
 MAILS_DB_PATH="${GEN_DIR}/data/databases/shared.db"
 SEAWEEDFS_ENV_FILE="${ROOT_DIR}/seaweedfs/.env"
 SEAWEEDFS_ENV_EXAMPLE="${ROOT_DIR}/seaweedfs/.env.example"
 
-# --- Extract primary (first) domain from silver.yaml ---
+# --- Extract primary (first) domain from opengovmail.yaml ---
 # Look for the first domain entry under the domains list
 MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "$CONFIG_FILE" | sed 's/.*domain:\s*//' | xargs)
 MAIL_DOMAIN=${MAIL_DOMAIN:-example.local}
@@ -54,8 +54,8 @@ S3_BUCKET=${S3_BUCKET:-email-attachments}
 S3_TIMEOUT=${S3_TIMEOUT:-30}
 
 # --- Certificate paths ---
-LETSENCRYPT_PATH="${ROOT_DIR}/silver-config/certbot/keys/etc/live/${MAIL_DOMAIN}"
-RAVEN_CERT_PATH="${ROOT_DIR}/silver-config/raven/certs"
+LETSENCRYPT_PATH="${ROOT_DIR}/opengovmail-config/certbot/keys/etc/live/${MAIL_DOMAIN}"
+RAVEN_CERT_PATH="${ROOT_DIR}/opengovmail-config/raven/certs"
 
 # --- Prepare directories ---
 mkdir -p "$(dirname "$OUTPUT_FILE")" "$(dirname "$MAILS_DB_PATH")" "$RAVEN_CERT_PATH"

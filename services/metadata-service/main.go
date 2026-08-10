@@ -333,7 +333,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 }
 
 func main() {
-	log.Println("Silver Metadata Service (Go)")
+	log.Println("OpenGovMail Metadata Service (Go)")
 	log.Printf("Port: %s", config.Port)
 	log.Printf("ClamAV DB Path: %s", config.ClamAVDBPath)
 	log.Printf("External API URL: %s", config.ExternalAPIURL)

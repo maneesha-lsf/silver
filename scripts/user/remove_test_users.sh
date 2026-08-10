@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-#  Silver Mail - Remove Test Users Script
+#  OpenGovMail Mail - Remove Test Users Script
 # ============================================
 # This script removes all test users created by create_test_users.sh
 # It removes users from:
@@ -25,7 +25,7 @@ NC="\033[0m" # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVICES_DIR="$(cd "${SCRIPT_DIR}/../../services" && pwd)"
 CONF_DIR="$(cd "${SCRIPT_DIR}/../../conf" && pwd)"
-CONFIG_FILE="${CONF_DIR}/silver.yaml"
+CONFIG_FILE="${CONF_DIR}/opengovmail.yaml"
 OUTPUT_DIR="${SCRIPT_DIR}/test_users"
 CREDENTIALS_FILE="${OUTPUT_DIR}/test_users_credentials.csv"
 
@@ -36,14 +36,14 @@ THUNDER_PORT="8090"
 # Helper Functions
 # -------------------------------
 
-# Extract domain from silver.yaml
+# Extract domain from opengovmail.yaml
 get_domain_from_config() {
     if [ ! -f "$CONFIG_FILE" ]; then
         echo -e "${RED}✗ Configuration file not found: $CONFIG_FILE${NC}"
         exit 1
     fi
     
-    # Extract the first domain from the domains array in silver.yaml
+    # Extract the first domain from the domains array in opengovmail.yaml
     local domain=$(grep -m 1 '^\s*-\s*domain:' "$CONFIG_FILE" | sed 's/.*domain:\s*//' | xargs)
     
     if [ -z "$domain" ]; then
@@ -89,7 +89,7 @@ get_container_user_count() {
 # -------------------------------
 
 echo -e "${CYAN}==============================================${NC}"
-echo -e " 🗑️  ${RED}Silver Mail - Test User Removal${NC}"
+echo -e " 🗑️  ${RED}OpenGovMail Mail - Test User Removal${NC}"
 echo -e "${CYAN}==============================================${NC}\n"
 
 # Get domain from config file
@@ -113,8 +113,8 @@ if ! thunder_authenticate "$THUNDER_HOST" "$THUNDER_PORT"; then
     exit 1
 fi
 
-# Get organization unit ID for "silver"
-if ! thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "silver"; then
+# Get organization unit ID for "opengovmail"
+if ! thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "opengovmail"; then
     exit 1
 fi
 

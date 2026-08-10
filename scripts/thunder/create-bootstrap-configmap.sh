@@ -2,7 +2,7 @@
 # Create the Thunder bootstrap ConfigMap from the scripts in this directory.
 #
 # The Thunder Helm chart's setup job is a Helm pre-install hook, so the
-# ConfigMap it references (thunder.bootstrap.configMap.name in the silver
+# ConfigMap it references (thunder.bootstrap.configMap.name in the opengovmail
 # umbrella values) must already exist in the namespace *before* you run
 # `helm install`. This script creates/refreshes it directly from the canonical
 # scripts here, so they are never duplicated into the chart.
@@ -10,15 +10,15 @@
 # Usage:
 #   scripts/thunder/create-bootstrap-configmap.sh [namespace] [configmap-name]
 #
-# Defaults: namespace=silver, configmap-name=thunder-bootstrap
+# Defaults: namespace=opengovmail, configmap-name=thunder-bootstrap
 set -euo pipefail
 
-NAMESPACE="${1:-silver}"
+NAMESPACE="${1:-opengovmail}"
 CONFIGMAP_NAME="${2:-thunder-bootstrap}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 # Keep this list in sync with thunder.bootstrap.configMap.files in
-# charts/silver/values.yaml. common.sh is intentionally omitted — it ships with
+# charts/opengovmail/values.yaml. common.sh is intentionally omitted — it ships with
 # the Thunder image and is preserved because we mount individual files.
 FILES=(
   "01-default-resources.sh"

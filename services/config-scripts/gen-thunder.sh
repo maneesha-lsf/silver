@@ -6,13 +6,13 @@ set -euo pipefail
 # Define constant paths
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-# Extract primary (first) domain from the domains list in silver.yaml
-readonly MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${ROOT_DIR}/../conf/silver.yaml" | sed 's/.*domain:\s*//' | xargs)
-readonly LETSENCRYPT_PATH="${ROOT_DIR}/silver-config/certbot/keys/etc/live/${MAIL_DOMAIN}"
-readonly THUNDER_CERTS_PATH="${ROOT_DIR}/silver-config/thunder/certs"
-readonly THUNDER_DEPLOYMENT_FILE="${ROOT_DIR}/silver-config/thunder/deployment.yaml"
-readonly THUNDER_CONSOLE_CONFIG="${ROOT_DIR}/silver-config/thunder/console-config.js"
-readonly THUNDER_GATE_CONFIG="${ROOT_DIR}/silver-config/thunder/gate-config.js"
+# Extract primary (first) domain from the domains list in opengovmail.yaml
+readonly MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${ROOT_DIR}/../conf/opengovmail.yaml" | sed 's/.*domain:\s*//' | xargs)
+readonly LETSENCRYPT_PATH="${ROOT_DIR}/opengovmail-config/certbot/keys/etc/live/${MAIL_DOMAIN}"
+readonly THUNDER_CERTS_PATH="${ROOT_DIR}/opengovmail-config/thunder/certs"
+readonly THUNDER_DEPLOYMENT_FILE="${ROOT_DIR}/opengovmail-config/thunder/deployment.yaml"
+readonly THUNDER_CONSOLE_CONFIG="${ROOT_DIR}/opengovmail-config/thunder/console-config.js"
+readonly THUNDER_GATE_CONFIG="${ROOT_DIR}/opengovmail-config/thunder/gate-config.js"
 readonly THUNDER_PORT="8090"
 
 mkdir -p "${THUNDER_CERTS_PATH}"

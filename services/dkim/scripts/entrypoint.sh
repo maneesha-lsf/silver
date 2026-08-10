@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-CONFIG_FILE="/etc/opendkim/silver.yaml"
+CONFIG_FILE="/etc/opendkim/opengovmail.yaml"
 
 echo "=== Extracting domains from $CONFIG_FILE ==="
 
@@ -11,7 +11,7 @@ DOMAINS=$(yq eval '.domains[].domain' "$CONFIG_FILE" 2>/dev/null | grep -v '^nul
 # Fallback if no domains found
 if [ -z "$DOMAINS" ]; then
     echo "⚠️  Warning: Could not extract domains from $CONFIG_FILE"
-    echo "⚠️  Please ensure silver.yaml has domains configured"
+    echo "⚠️  Please ensure opengovmail.yaml has domains configured"
     DOMAINS="example.org"
 fi
 

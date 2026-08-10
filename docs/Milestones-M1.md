@@ -1,10 +1,10 @@
 # Milestones
 
-The first 3 product milestones of Silver will consist of building an "Email 1.0" product.  
+The first 3 product milestones of OpenGovMail will consist of building an "Email 1.0" product.  
 
 Email 1.0 means the functionality of email products like GMail and OutLook, as of End-of-2024. This product will be the basis of building "Email 2.0", which will have next-evolution functionality.
 
-This is (sort of) what Copper (previous incarnation of Silver) was supposed to be.
+This is (sort of) what Copper (previous incarnation of OpenGovMail) was supposed to be.
 
 ---
 

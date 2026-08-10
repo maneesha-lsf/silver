@@ -1,6 +1,6 @@
-# How to setup Mail User Agent (MUA) for Silver Mail Server
+# How to setup Mail User Agent (MUA) for OpenGovMail Mail Server
 
-This guide will help you set up a Mail User Agent (MUA) to interact with your Silver Mail Server. A MUA is an application that allows users to send, receive, and manage their email.
+This guide will help you set up a Mail User Agent (MUA) to interact with your OpenGovMail Mail Server. A MUA is an application that allows users to send, receive, and manage their email.
 
 **Note:** For enhanced security, we recommend using port 993 (IMAPS with SSL/TLS) for incoming mail instead of port 143 (STARTTLS).
 

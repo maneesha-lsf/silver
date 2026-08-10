@@ -6,11 +6,11 @@ services:
       - "25:25"
       - "587:587"
     volumes:
-      - ./silver-config/postfix/main.cf:/etc/postfix/main.cf:ro
-      - ./silver-config/postfix/master.cf:/etc/postfix/master.cf:ro
-      - ../conf/silver.yaml:/etc/postfix/silver.yaml
-      - ./silver-config/certbot/keys/etc:/etc/letsencrypt:ro
-      - ./silver-config/raven/data:/app/data:rw
+      - ./opengovmail-config/postfix/main.cf:/etc/postfix/main.cf:ro
+      - ./opengovmail-config/postfix/master.cf:/etc/postfix/master.cf:ro
+      - ../conf/opengovmail.yaml:/etc/postfix/opengovmail.yaml
+      - ./opengovmail-config/certbot/keys/etc:/etc/letsencrypt:ro
+      - ./opengovmail-config/raven/data:/app/data:rw
       - postfix-spool:/var/spool/postfix
       - postfix-logs:/var/log
     networks:
@@ -35,9 +35,9 @@ services:
       - "12345:12345"
       - "9100:9100"
     volumes:
-      - ./silver-config/raven/conf:/etc/raven:rw
-      - ./silver-config/raven/data:/app/data:rw
-      - ./silver-config/raven/certs:/certs:ro
+      - ./opengovmail-config/raven/conf:/etc/raven:rw
+      - ./opengovmail-config/raven/data:/app/data:rw
+      - ./opengovmail-config/raven/certs:/certs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       - DB_FILE=/app/data/databases/shared.db
@@ -61,11 +61,11 @@ services:
     image: ghcr.io/lsflk/silver-dkim:main
     container_name: opendkim
     volumes:
-      - ../conf/silver.yaml:/etc/opendkim/silver.yaml
-      - ./silver-config/opendkim/opendkim.conf:/etc/opendkim/opendkim.conf:ro
-      - ./silver-config/opendkim/KeyTable:/etc/opendkim/KeyTable:ro
-      - ./silver-config/opendkim/SigningTable:/etc/opendkim/SigningTable:ro
-      - ./silver-config/opendkim/TrustedHosts:/etc/opendkim/TrustedHosts:ro
+      - ../conf/opengovmail.yaml:/etc/opendkim/opengovmail.yaml
+      - ./opengovmail-config/opendkim/opendkim.conf:/etc/opendkim/opendkim.conf:ro
+      - ./opengovmail-config/opendkim/KeyTable:/etc/opendkim/KeyTable:ro
+      - ./opengovmail-config/opendkim/SigningTable:/etc/opendkim/SigningTable:ro
+      - ./opengovmail-config/opendkim/TrustedHosts:/etc/opendkim/TrustedHosts:ro
       - dkim-keys:/etc/dkimkeys
     networks:
       - mail-network
@@ -85,7 +85,7 @@ services:
     volumes:
       - rspamd_data:/var/lib/rspamd
       - rspamd_logs:/var/log/rspamd
-      - ./silver-config/rspamd/:/etc/rspamd/local.d:ro
+      - ./opengovmail-config/rspamd/:/etc/rspamd/local.d:ro
     networks:
       - mail-network
 
@@ -133,7 +133,7 @@ services:
 
   clamav-exporter:
     build:
-      context: ./silver-config/clamav-exporter
+      context: ./opengovmail-config/clamav-exporter
       dockerfile: Dockerfile
     container_name: clamav-exporter
     volumes:
@@ -164,7 +164,7 @@ services:
     volumes:
       - thunder-db:/opt/thunder/repository/database
       - consent-db:/opt/thunder/consent/repository/database
-      - ./silver-config/thunder/deployment.yaml:/opt/thunder/repository/conf/deployment.yaml:ro
+      - ./opengovmail-config/thunder/deployment.yaml:/opt/thunder/repository/conf/deployment.yaml:ro
       - ./../scripts/thunder/01-default-resources.sh:/opt/thunder/bootstrap/01-default-resources.sh
       - ./../scripts/thunder/02-sample-resources.sh:/opt/thunder/bootstrap/02-sample-resources.sh
     environment:
@@ -187,11 +187,11 @@ services:
     volumes:
       - thunder-db:/opt/thunder/repository/database
       - consent-db:/opt/thunder/consent/repository/database
-      - ./silver-config/thunder/certs/server.cert:/opt/thunder/repository/resources/security/server.cert:ro
-      - ./silver-config/thunder/certs/server.key:/opt/thunder/repository/resources/security/server.key:ro
-      - ./silver-config/thunder/deployment.yaml:/opt/thunder/repository/conf/deployment.yaml:ro
-      - ./silver-config/thunder/console-config.js:/opt/thunder/apps/console/config.js:ro
-      - ./silver-config/thunder/gate-config.js:/opt/thunder/apps/gate/config.js:ro
+      - ./opengovmail-config/thunder/certs/server.cert:/opt/thunder/repository/resources/security/server.cert:ro
+      - ./opengovmail-config/thunder/certs/server.key:/opt/thunder/repository/resources/security/server.key:ro
+      - ./opengovmail-config/thunder/deployment.yaml:/opt/thunder/repository/conf/deployment.yaml:ro
+      - ./opengovmail-config/thunder/console-config.js:/opt/thunder/apps/console/config.js:ro
+      - ./opengovmail-config/thunder/gate-config.js:/opt/thunder/apps/gate/config.js:ro
     networks:
       - mail-network
     restart: unless-stopped
@@ -200,18 +200,18 @@ services:
     image: ghcr.io/lsflk/silver-certbot:main
     container_name: certbot
     volumes:
-      - ./silver-config/certbot/keys/etc:/etc/letsencrypt
-      - ./silver-config/certbot/keys/log:/var/log/letsencrypt
-      - ./silver-config/certbot/keys/lib:/var/lib/letsencrypt"
+      - ./opengovmail-config/certbot/keys/etc:/etc/letsencrypt
+      - ./opengovmail-config/certbot/keys/log:/var/log/letsencrypt
+      - ./opengovmail-config/certbot/keys/lib:/var/lib/letsencrypt"
     ports:
       - "80:80"
       - "443:443"
     networks:
       - mail-network
 
-  silver-metadata:
+  opengovmail-metadata:
     image: ghcr.io/lsflk/silver-metadata-service:main
-    container_name: silver-metadata
+    container_name: opengovmail-metadata
     ports:
       - "8888:8888"
     volumes:
@@ -287,7 +287,7 @@ services:
     container_name: loki
     command: -config.file=/etc/loki/loki-config.yaml
     volumes:
-      - ./silver-config/loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
+      - ./opengovmail-config/loki/loki-config.yaml:/etc/loki/loki-config.yaml:ro
       - loki-data:/loki
     restart: unless-stopped
     networks:
@@ -298,7 +298,7 @@ services:
     image: grafana/promtail:3.5.8
     container_name: promtail
     volumes:
-      - ./silver-config/promtail/promtail-config.yaml:/mnt/config/promtail-config.yaml
+      - ./opengovmail-config/promtail/promtail-config.yaml:/mnt/config/promtail-config.yaml
       - /var/log:/var/log:ro
       - postfix-logs:/mnt/logs/postfix:ro
       - rspamd_logs:/mnt/logs/rspamd:ro
@@ -315,7 +315,7 @@ services:
     container_name: prometheus
     env_file: ".env"
     volumes:
-      - ./silver-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./opengovmail-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -337,11 +337,11 @@ services:
       - 3000:3000
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./silver-config/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./silver-config/grafana/dashboards:/var/lib/grafana/dashboards:ro
-      - ./silver-config/grafana/certs/grafana.crt:/etc/grafana/grafana.crt:ro
-      - ./silver-config/grafana/certs/grafana.key:/etc/grafana/grafana.key:ro
-      - ./silver-config/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./opengovmail-config/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./opengovmail-config/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - ./opengovmail-config/grafana/certs/grafana.crt:/etc/grafana/grafana.crt:ro
+      - ./opengovmail-config/grafana/certs/grafana.key:/etc/grafana/grafana.key:ro
+      - ./opengovmail-config/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}

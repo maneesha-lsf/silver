@@ -18,13 +18,13 @@ nano services/.env
 ### Step 3: Build and Run
 ```bash
 bash scripts/setup/setup.sh
-bash scripts/services/start-silver.sh
+bash scripts/service/start-opengovmail.sh
 ```
 
 ### Step 4: Switch Back to Production
 ```bash
 rm services/docker-compose.override.yml
-bash scripts/services/start-silver.sh
+bash scripts/service/start-opengovmail.sh
 ```
 
 ## Files

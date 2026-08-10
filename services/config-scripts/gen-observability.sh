@@ -7,18 +7,18 @@ set -e
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 ENV_FILE="${PROJECT_ROOT}/.env"
-SILVER_CONFIG="${PROJECT_ROOT}/silver-config"
+OPENGOVMAIL_CONFIG="${PROJECT_ROOT}/opengovmail-config"
 
 # Grafana paths
-GRAFANA_ALERTS_FILE="${SILVER_CONFIG}/grafana/provisioning/alerting/contact-points.yaml"
-GRAFANA_CERTS_DIR="${SILVER_CONFIG}/grafana/certs"
+GRAFANA_ALERTS_FILE="${OPENGOVMAIL_CONFIG}/grafana/provisioning/alerting/contact-points.yaml"
+GRAFANA_CERTS_DIR="${OPENGOVMAIL_CONFIG}/grafana/certs"
 
 # Certbot / Let's Encrypt paths
-MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${PROJECT_ROOT}/../conf/silver.yaml" | sed 's/.*domain:\s*//' | xargs)
-LETSENCRYPT_DIR="${SILVER_CONFIG}/certbot/keys/etc/live/${MAIL_DOMAIN}"
+MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${PROJECT_ROOT}/../conf/opengovmail.yaml" | sed 's/.*domain:\s*//' | xargs)
+LETSENCRYPT_DIR="${OPENGOVMAIL_CONFIG}/certbot/keys/etc/live/${MAIL_DOMAIN}"
 
 # Grafana config
-GRAFANA_CONFIG_FILE="${SILVER_CONFIG}/grafana/grafana.ini"
+GRAFANA_CONFIG_FILE="${OPENGOVMAIL_CONFIG}/grafana/grafana.ini"
 
 # -------------------------------
 # Load environment variables
@@ -69,7 +69,7 @@ echo "Grafana TLS certificates installed successfully."
 echo "Updating Grafana domain in grafana.ini..."
 
 if [[ -z "${MAIL_DOMAIN}" ]]; then
-  echo "ERROR: No domain configured in silver.yaml. Cannot update Grafana domain." >&2
+  echo "ERROR: No domain configured in opengovmail.yaml. Cannot update Grafana domain." >&2
   exit 1
 fi
 

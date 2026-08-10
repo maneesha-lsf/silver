@@ -34,12 +34,12 @@ fi
 
 # Step 1: Stop all containers using docker compose
 echo -e "\n${YELLOW}Step 1/3: Stopping Docker containers${NC}"
-echo "  - Stopping Silver mail services..."
+echo "  - Stopping OpenGovMail mail services..."
 (cd "${SERVICES_DIR}" && docker compose down)
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}  ✓ Silver services stopped successfully${NC}"
+    echo -e "${GREEN}  ✓ OpenGovMail services stopped successfully${NC}"
 else
-    echo -e "${RED}  ✗ Failed to stop Silver services${NC}"
+    echo -e "${RED}  ✗ Failed to stop OpenGovMail services${NC}"
 fi
 
 echo "  - Stopping SeaweedFS services..."

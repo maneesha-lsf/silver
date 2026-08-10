@@ -1,4 +1,4 @@
-module github.com/lsflk/silver-metadata-service
+module github.com/lsflk/opengovmail-metadata-service
 
 go 1.21
 

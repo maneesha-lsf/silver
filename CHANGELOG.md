@@ -12,35 +12,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Multi-domain support, improved configuration handling, group address validation, Thunder upgrade to 0.27.0, and removal of legacy socketmap/Thunder integration.
 
 ## What's Changed
-* feat: enhance setup scripts for multi-domain support and improve configuration handling by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/301
-* feat: add support for group address validation in user-exists map and implement group validation logic by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/302
-* feat: upgrade Thunder image version to 0.27.0 in Docker Compose by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/303
-* Refactor: Remove socketmap handler and thunder integration by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/305
+* feat: enhance setup scripts for multi-domain support and improve configuration handling by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/301
+* feat: add support for group address validation in user-exists map and implement group validation logic by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/302
+* feat: upgrade Thunder image version to 0.27.0 in Docker Compose by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/303
+* Refactor: Remove socketmap handler and thunder integration by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/305
 
 
-**Full Changelog**: https://github.com/LSFLK/silver/compare/v.0.2.1...v.0.3.0
+**Full Changelog**: https://github.com/OpenGovMail/OpenGovMail/compare/v.0.2.1...v.0.3.0
 
 ## [0.2.1]
 
-This release focuses on making improvements to the observability of silver.
+This release focuses on making improvements to the observability of OpenGovMail.
 
 ## What's Changed
 ### Added
-* Update thunder idp to latest version to support admin initiated user registration via url flow by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/265
-* Move observability services into mail stack and update configur… by @maneeshaxyz in https://github.com/LSFLK/silver/pull/264
-* Add Grafana domain update functionality in gen-observability script by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/275
+* Update thunder idp to latest version to support admin initiated user registration via url flow by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/265
+* Move observability services into mail stack and update configur… by @maneeshaxyz in https://github.com/OpenGovMail/OpenGovMail/pull/264
+* Add Grafana domain update functionality in gen-observability script by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/275
 
 ### Removed
-* Remove Change Password UI by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/267
+* Remove Change Password UI by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/267
 
 ### Fixed
-* Fix observability bugs by @maneeshaxyz in https://github.com/LSFLK/silver/pull/270
-* Fixed the issue of not saving the attachments in the blob storage. by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/268
-* Fix observability port issue by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/273
-* Loki not working correctly issue resolved. by @maneeshaxyz in https://github.com/LSFLK/silver/pull/277
-* Secure the rspamd web UI dashboard by @Aravinda-HWK in https://github.com/LSFLK/silver/pull/279
+* Fix observability bugs by @maneeshaxyz in https://github.com/OpenGovMail/OpenGovMail/pull/270
+* Fixed the issue of not saving the attachments in the blob storage. by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/268
+* Fix observability port issue by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/273
+* Loki not working correctly issue resolved. by @maneeshaxyz in https://github.com/OpenGovMail/OpenGovMail/pull/277
+* Secure the rspamd web UI dashboard by @Aravinda-HWK in https://github.com/OpenGovMail/OpenGovMail/pull/279
 
-**Full Changelog**: https://github.com/LSFLK/silver/compare/v.0.2.0...v.0.2.1
+**Full Changelog**: https://github.com/OpenGovMail/OpenGovMail/compare/v.0.2.0...v.0.2.1
 
 ## [0.2.0] - Raven Integration and Platform Hardening
 
@@ -70,7 +70,7 @@ observability improvements, and stronger operational tooling.
   refinements (`#131`, `#144`).
 - Enhanced multi-domain certificate/domain handling and DKIM script workflows
   (`#157`, `#158`).
-- Removed Unix socket usage from core Silver services (`#236`).
+- Removed Unix socket usage from core OpenGovMail services (`#236`).
 
 ### Fixed
 
@@ -98,16 +98,16 @@ observability improvements, and stronger operational tooling.
 
 ### Full Changelog
 
-https://github.com/LSFLK/silver/compare/v0.1.0...v0.2.0
+https://github.com/OpenGovMail/OpenGovMail/compare/v0.1.0...v0.2.0
 
-## [0.1.0] - First Stable Silver M1 Release
+## [0.1.0] - First Stable OpenGovMail M1 Release
 
-This release saves a stable working version of Silver M1 before integrating
+This release saves a stable working version of OpenGovMail M1 before integrating
 Raven into the repository.
 
 ### Added
 
-- Initial Dockerized Silver M1 services and SMTP host-to-container delivery
+- Initial Dockerized OpenGovMail M1 services and SMTP host-to-container delivery
   testing (`#16`, `#17`, `#27`).
 - Initial API/Web UI setup and operation scripts for running the mail server
   (`#18`, `#31`, `#32`).
@@ -139,4 +139,4 @@ Raven into the repository.
 
 ### Full Changelog
 
-https://github.com/LSFLK/silver/releases/tag/v0.1.0
+https://github.com/OpenGovMail/OpenGovMail/releases/tag/v0.1.0

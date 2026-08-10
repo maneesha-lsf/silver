@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ================================================================
-# TLS/SSL Security Test Script for Silver Mail Server
+# TLS/SSL Security Test Script for OpenGovMail Mail Server
 # ================================================================
 # This script tests all TLS-enabled ports from docker-compose.yaml
 # and provides comprehensive security analysis.
@@ -22,9 +22,9 @@ elif [ "${1:-}" = "--critical" ]; then
     MODE="critical"
 fi
 
-# Read domains from silver.yaml configuration file
+# Read domains from opengovmail.yaml configuration file
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_FILE="$SCRIPT_DIR/../../../conf/silver.yaml"
+CONFIG_FILE="$SCRIPT_DIR/../../../conf/opengovmail.yaml"
 
 if [ ! -f "$CONFIG_FILE" ]; then
     echo "Error: Configuration file not found at $CONFIG_FILE"

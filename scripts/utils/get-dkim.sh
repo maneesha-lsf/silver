@@ -9,7 +9,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Conf directory contains config files
 CONF_DIR="$(cd "${SCRIPT_DIR}/../../conf" && pwd)"
-CONFIG_FILE="${CONF_DIR}/silver.yaml"
+CONFIG_FILE="${CONF_DIR}/opengovmail.yaml"
 
 CONTAINER_NAME="opendkim"
 

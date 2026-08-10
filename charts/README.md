@@ -1,15 +1,15 @@
-# Silver Helm Charts
+# OpenGovMail Helm Charts
 
-This directory contains Helm charts for Silver services.
+This directory contains Helm charts for OpenGovMail services.
 
 ## Structure
 
-- `silver/`: Umbrella chart that aggregates service subcharts.
-- `silver/charts/opendkim/`: OpenDKIM service chart (first migrated service).
+- `opengovmail/`: Umbrella chart that aggregates service subcharts.
+- `opengovmail/charts/opendkim/`: OpenDKIM service chart (first migrated service).
 
 ## Conventions
 
-- Service charts live under `silver/charts/<service-name>/`.
+- Service charts live under `opengovmail/charts/<service-name>/`.
 - Every service chart should include:
   - `values.yaml` with safe defaults.
   - `templates/` for Kubernetes resources.
@@ -22,7 +22,7 @@ When adding future services (smtp, rspamd, raven, etc.), repeat the OpenDKIM cha
 
 ## Install cert-manager (once per cluster)
 
-cert-manager is cluster infrastructure. Install it once, outside of Silver.
+cert-manager is cluster infrastructure. Install it once, outside of OpenGovMail.
 
 ```bash
 helm install cert-manager oci://quay.io/jetstack/charts/cert-manager \
@@ -105,37 +105,37 @@ Burning through this with misconfigured charts is a common mistake — staging p
 
 ---
 
-## Step 4 — Install Silver
+## Step 4 — Install OpenGovMail
 
 From the repo root (`global.domain` is mandatory — set it in `values.yaml` or via `--set`):
 
 ```bash
-helm upgrade --install silver ./charts/silver \
+helm upgrade --install opengovmail ./charts/opengovmail \
   --set global.domain=yourdomain.com \
-  --namespace silver \
+  --namespace opengovmail \
   --create-namespace
 ```
 
 With a values overlay (e.g. dev — TLS/SASL off, standalone postfix, domain preset):
 
 ```bash
-helm upgrade --install silver ./charts/silver \
-  -f charts/silver/values-dev.yaml \
-  --namespace silver \
+helm upgrade --install opengovmail ./charts/opengovmail \
+  -f charts/opengovmail/values-dev.yaml \
+  --namespace opengovmail \
   --create-namespace
 ```
 
 Verify certificates:
 
 ```bash
-kubectl get certificate -n silver
+kubectl get certificate -n opengovmail
 # mail-<domain>-tls and <domain>-tls should show READY=True
 ```
 
 If not ready yet, check progress:
 
 ```bash
-kubectl describe certificate <name> -n silver
+kubectl describe certificate <name> -n opengovmail
 ```
 ---
 
@@ -144,7 +144,7 @@ kubectl describe certificate <name> -n silver
 Thunder is pulled in as an upstream OCI dependency
 (`oci://ghcr.io/asgardeo/helm-charts/thunder`, version `0.32.0`) and configured
 under the `thunder:` key in the umbrella values. The defaults in
-[silver/values.yaml](silver/values.yaml) reproduce the docker-compose `thunder`
+[opengovmail/values.yaml](opengovmail/values.yaml) reproduce the docker-compose `thunder`
 setup: the `0.32.0` image, a shared SQLite database seeded from the image (via an
 init container, replacing the compose `thunder-db-init`), a one-time setup job
 (compose `thunder-setup`), a single pod, and the bootstrap scripts from
@@ -157,7 +157,7 @@ ConfigMap it references must already exist in the namespace. Create it from the
 canonical scripts (they are not duplicated into the chart):
 
 ```bash
-scripts/thunder/create-bootstrap-configmap.sh silver          # <namespace> [configmap-name]
+scripts/thunder/create-bootstrap-configmap.sh opengovmail          # <namespace> [configmap-name]
 ```
 
 This mounts `01-default-resources.sh` and `02-sample-resources.sh` via `subPath`,
@@ -172,7 +172,7 @@ Create it in the release namespace before installing:
 
 ```bash
 kubectl create secret generic thunder-admin-credentials \
-  --namespace silver \
+  --namespace opengovmail \
   --from-literal=password='<your-password>'
 ```
 
@@ -180,21 +180,21 @@ kubectl create secret generic thunder-admin-credentials \
 
 ```bash
 # 1. Bootstrap ConfigMap + admin Secret first (pre-install hook dependencies)
-scripts/thunder/create-bootstrap-configmap.sh silver
+scripts/thunder/create-bootstrap-configmap.sh opengovmail
 kubectl create secret generic thunder-admin-credentials \
-  --namespace silver --from-literal=password='<your-password>'
+  --namespace opengovmail --from-literal=password='<your-password>'
 
 # 2. Install the umbrella (Thunder enabled by default)
-helm dependency update ./charts/silver
-helm upgrade --install silver ./charts/silver \
+helm dependency update ./charts/opengovmail
+helm upgrade --install opengovmail ./charts/opengovmail \
   --set global.domain=yourdomain.com \
-  --namespace silver --create-namespace
+  --namespace opengovmail --create-namespace
 ```
 
 Thunder is reached in-cluster on its Service at port `8090` (e.g. raven ->
 `thunder:8090`), matching the compose network. External ingress is disabled by
 default; enable `thunder.ingress` and point it at your domain if you need the
 console/gate UIs exposed. The dev overlay
-([values-dev.yaml](silver/values-dev.yaml)) disables Thunder for a postfix-only
+([values-dev.yaml](opengovmail/values-dev.yaml)) disables Thunder for a postfix-only
 bring-up.
 ---

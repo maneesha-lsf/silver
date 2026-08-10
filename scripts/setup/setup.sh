@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-#  Silver Mail Setup Script
+#  OpenGovMail Mail Setup Script
 #  Generates all configurations for services
 # ============================================
 
@@ -16,10 +16,10 @@ readonly NC="\033[0m" # No Color
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly SERVICES_DIR="$(cd "${SCRIPT_DIR}/../../services" && pwd)"
 readonly CONF_DIR="$(cd "${SCRIPT_DIR}/../../conf" && pwd)"
-readonly CONFIG_FILE="${CONF_DIR}/silver.yaml"
+readonly CONFIG_FILE="${CONF_DIR}/opengovmail.yaml"
 
 # Read config repository URL
-readonly SILVER_CONFIG=$(grep -m 1 '^config-url:' "${CONFIG_FILE}" | sed 's/config-url: //' | xargs)
+readonly CONFIG_REPO_URL=$(grep -m 1 '^config-url:' "${CONFIG_FILE}" | sed 's/config-url: //' | xargs)
 
 # ASCII Banner
 echo -e "${CYAN}"
@@ -46,7 +46,7 @@ EOF
 echo -e "${NC}"
 
 echo
-echo -e " 🚀 ${GREEN}Welcome to the Silver Mail System Setup${NC}"
+echo -e " 🚀 ${GREEN}Welcome to the OpenGovMail Mail System Setup${NC}"
 echo "---------------------------------------------"
 
 # ================================
@@ -86,10 +86,10 @@ done
 # ================================
 echo -e "\n${YELLOW}Step 2/3: Clone configuration repository${NC}"
 
-if [ -d "${SERVICES_DIR}/silver-config" ]; then
+if [ -d "${SERVICES_DIR}/opengovmail-config" ]; then
 	echo "Configuration repository already exists. Skipping clone."
 else
-	git clone "${SILVER_CONFIG}" "${SERVICES_DIR}/silver-config"
+	git clone "${CONFIG_REPO_URL}" "${SERVICES_DIR}/opengovmail-config"
 fi
 
 # ================================

@@ -5,7 +5,7 @@ set -e
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVICES_DIR="${SCRIPT_DIR}/../../services"
-CONFIG_DIR="${SERVICES_DIR}/silver-config/rspamd"
+CONFIG_DIR="${SERVICES_DIR}/opengovmail-config/rspamd"
 
 # Load .env if it exists, using safer 'source' approach
 if [ -f "${SCRIPT_DIR}/../.env" ]; then

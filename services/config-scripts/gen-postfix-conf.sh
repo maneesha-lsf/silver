@@ -8,14 +8,14 @@ set -euo pipefail
 # Define constant paths
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOT_DIR="$(dirname "$(dirname "$SCRIPT_DIR")")"
-readonly SILVER_YAML_FILE="${ROOT_DIR}/conf/silver.yaml"
-readonly CONFIGS_PATH="${ROOT_DIR}/services/silver-config/postfix"
+readonly OPENGOVMAIL_YAML_FILE="${ROOT_DIR}/conf/opengovmail.yaml"
+readonly CONFIGS_PATH="${ROOT_DIR}/services/opengovmail-config/postfix"
 readonly DKIM_SELECTOR=mail
 
 # --- Main Logic ---
-# Extract primary (first) domain from the domains list in silver.yaml
-readonly MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${SILVER_YAML_FILE}" | sed 's/.*domain:\s*//' | xargs)
-#export RELAYHOST=$(yq -e '.relayhost' "$SILVER_YAML_FILE" || echo "")
+# Extract primary (first) domain from the domains list in opengovmail.yaml
+readonly MAIL_DOMAIN=$(grep -m 1 '^\s*-\s*domain:' "${OPENGOVMAIL_YAML_FILE}" | sed 's/.*domain:\s*//' | xargs)
+#export RELAYHOST=$(yq -e '.relayhost' "$OPENGOVMAIL_YAML_FILE" || echo "")
 
 # --- Derived variables ---
 MAIL_HOSTNAME=${MAIL_HOSTNAME:-mail.$MAIL_DOMAIN}

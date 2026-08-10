@@ -1,13 +1,13 @@
-# Thunder API Consumer Contract Guide for Silver
+# Thunder API Consumer Contract Guide for OpenGovMail
 
 ## Overview
 
-This document describes the Thunder APIs Silver depends on through its provisioning and bootstrap scripts.
+This document describes the Thunder APIs OpenGovMail depends on through its provisioning and bootstrap scripts.
 It is a consumer contract, not a full provider API documentation set.
 
 Use this together with the OpenAPI consumer spec to:
 
-- document exactly what Silver uses,
+- document exactly what OpenGovMail uses,
 - detect breaking changes early,
 - define a clear change-notification process.
 
@@ -17,12 +17,12 @@ In scope:
 
 - APIs called from `scripts/thunder/01-default-resources.sh`.
 - APIs called from `scripts/thunder/02-sample-resources.sh`.
-- Only request/response fields Silver scripts actually send, parse, or branch on.
+- Only request/response fields OpenGovMail scripts actually send, parse, or branch on.
 
 Out of scope:
 
 - Thunder endpoints not called by these scripts.
-- Response fields Silver does not read.
+- Response fields OpenGovMail does not read.
 - Internal helper implementation details not visible in these script files.
 
 ## Integration Flows
@@ -87,11 +87,11 @@ Request fields:
 
 | Field | Required | Notes |
 |---|---|---|
-| handle | Yes | Silver sends `default` |
-| name | Yes | Silver sends `Default` |
+| handle | Yes | OpenGovMail sends `default` |
+| name | Yes | OpenGovMail sends `Default` |
 | description | Yes | Human-readable description |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -108,7 +108,7 @@ Method: GET
 Path: /organization-units/tree/default  
 Used by: fallback when OU create returns conflict
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -124,16 +124,16 @@ Method: POST
 Path: /user-schemas  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
-| name | Yes | Silver sends `Person` |
+| name | Yes | OpenGovMail sends `Person` |
 | ouId | Yes | Default OU ID |
 | schema.username | Yes | type string, required true, unique true |
 | schema.email | Yes | type string, required true, unique true, regex validation |
 | schema.password | Yes | type string, required true, credential true |
-| systemAttributes.display | Yes | Silver sends `username` |
+| systemAttributes.display | Yes | OpenGovMail sends `username` |
 
 Expected statuses:
 
@@ -146,17 +146,17 @@ Method: POST
 Path: /users  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
-| type | Yes | Silver sends `Person` |
+| type | Yes | OpenGovMail sends `Person` |
 | organizationUnit | Yes | Default OU ID |
 | attributes.username | Yes | Admin username from env/default |
 | attributes.password | Yes | Admin password from env/default |
 | attributes.email | Yes | Admin email |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -173,7 +173,7 @@ Method: GET
 Path: /users  
 Used by: fallback when admin create returns conflict
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -190,15 +190,15 @@ Method: POST
 Path: /resource-servers  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
-| name | Yes | Silver sends `System` |
-| identifier | Yes | Silver sends `system` |
+| name | Yes | OpenGovMail sends `System` |
+| identifier | Yes | OpenGovMail sends `system` |
 | ouId | Yes | Default OU ID |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -215,7 +215,7 @@ Method: GET
 Path: /resource-servers  
 Used by: fallback when create conflicts
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -232,7 +232,7 @@ Method: POST
 Path: /resource-servers/{resourceServerId}/resources  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -240,7 +240,7 @@ Request fields sent by Silver:
 | handle | Yes | One of `system`, `ou`, `user`, `userschema`, `group` |
 | parent | Conditionally | Required for child resources (`ou`, `user`, `userschema`, `group`) |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -261,7 +261,7 @@ Paths:
 
 Used by: fallback when resource create conflicts
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -278,12 +278,12 @@ Method: POST
 Path: /resource-servers/{resourceServerId}/resources/{resourceId}/actions  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
-| name | Yes | Silver sends `View` |
-| handle | Yes | Silver sends `view` |
+| name | Yes | OpenGovMail sends `View` |
+| handle | Yes | OpenGovMail sends `view` |
 | description | Yes | Read-only description |
 
 Expected statuses:
@@ -297,18 +297,18 @@ Method: POST
 Path: /roles  
 Used by: bootstrap
 
-Request fields sent by Silver:
+Request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
-| name | Yes | Silver sends `Administrator` |
+| name | Yes | OpenGovMail sends `Administrator` |
 | ouId | Yes | Default OU ID |
 | permissions[].resourceServerId | Yes | System resource server ID |
-| permissions[].permissions[] | Yes | Silver sends `system` |
+| permissions[].permissions[] | Yes | OpenGovMail sends `system` |
 | assignments[].id | Yes | Admin user ID |
-| assignments[].type | Yes | Silver sends `user` |
+| assignments[].type | Yes | OpenGovMail sends `user` |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -330,7 +330,7 @@ Paths:
 
 Used by: flow inventory and ID resolution
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -343,8 +343,8 @@ Expected status:
 
 Contract notes:
 
-- Silver assumes flow handle uniqueness within each flow type lookup context.
-- Silver requires stable `id` and `handle` presence for matching.
+- OpenGovMail assumes flow handle uniqueness within each flow type lookup context.
+- OpenGovMail requires stable `id` and `handle` presence for matching.
 
 ### 13) Create Applications (DEVELOP and Email App)
 
@@ -352,26 +352,26 @@ Method: POST
 Path: /applications  
 Used by: bootstrap and sample app setup
 
-Core request fields sent by Silver:
+Core request fields sent by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
 | name | Yes | `Develop` or sample app name |
 | description | Yes | App description |
-| is_registration_flow_enabled | Yes | Silver sends false |
+| is_registration_flow_enabled | Yes | OpenGovMail sends false |
 | allowed_user_types | Yes | Includes `Person` |
-| inbound_auth_config[].type | Yes | Silver sends `oauth2` |
+| inbound_auth_config[].type | Yes | OpenGovMail sends `oauth2` |
 | inbound_auth_config[].config.client_id | Yes | `DEVELOP` or `EMAIL_APP` |
 | inbound_auth_config[].config.redirect_uris | Yes | Includes configured callback URIs |
 | inbound_auth_config[].config.grant_types | Yes | Includes `authorization_code`; sample app also sends `refresh_token` |
 | inbound_auth_config[].config.response_types | Yes | Includes `code` |
-| inbound_auth_config[].config.pkce_required | Yes | Silver sends true |
-| inbound_auth_config[].config.token_endpoint_auth_method | Yes | Silver sends `none` |
-| inbound_auth_config[].config.public_client | Yes | Silver sends true |
+| inbound_auth_config[].config.pkce_required | Yes | OpenGovMail sends true |
+| inbound_auth_config[].config.token_endpoint_auth_method | Yes | OpenGovMail sends `none` |
+| inbound_auth_config[].config.public_client | Yes | OpenGovMail sends true |
 | auth_flow_id | Conditionally | Required by DEVELOP app payload |
 | registration_flow_id | Conditionally | Required by DEVELOP app payload |
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -390,7 +390,7 @@ Method: GET
 Path: /applications  
 Used by: fallback when app create returns already-exists outcome
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -411,7 +411,7 @@ Request body:
 
 - Raw theme JSON loaded from local files.
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -432,7 +432,7 @@ Request body:
 
 - Raw translation JSON loaded from language files.
 
-Response fields read by Silver:
+Response fields read by OpenGovMail:
 
 | Field | Required | Notes |
 |---|---|---|
@@ -446,24 +446,24 @@ Expected status:
 
 - Authorization scheme for protected management endpoints: Bearer token (provided by shared helper).
 - Content-Type for JSON POST requests: application/json.
-- Silver scripts call Thunder over HTTPS-compatible base URL settings.
+- OpenGovMail scripts call Thunder over HTTPS-compatible base URL settings.
 
 ## Breaking Change Policy
 
-The following are breaking for Silver provisioning unless coordinated:
+The following are breaking for OpenGovMail provisioning unless coordinated:
 
 - Remove or rename any endpoint listed in this guide.
 - Change HTTP method of any listed endpoint.
-- Remove request fields Silver sends for successful create operations.
-- Remove or rename response fields Silver parses (`id`, `handle`, `identifier`, `client_id`, `totalResults`, and admin username-containing user attributes where used).
-- Change semantic meaning of `handle`, `identifier`, `client_id`, or role assignment shape such that Silver cannot match existing resources.
+- Remove request fields OpenGovMail sends for successful create operations.
+- Remove or rename response fields OpenGovMail parses (`id`, `handle`, `identifier`, `client_id`, `totalResults`, and admin username-containing user attributes where used).
+- Change semantic meaning of `handle`, `identifier`, `client_id`, or role assignment shape such that OpenGovMail cannot match existing resources.
 - Change duplicate-resource signaling behavior without preserving currently handled statuses/patterns (`409`; and specific `400` duplicate-app patterns where currently relied on).
 - Return non-success for list lookups used as fallback recovery (`/users`, `/applications`, `/resource-servers`, flow list endpoints).
 
 Non-breaking examples:
 
 - Add optional response fields.
-- Add new endpoints Silver does not call.
+- Add new endpoints OpenGovMail does not call.
 - Add optional request fields with backward-compatible defaults.
 
 ## Change Notification Process
@@ -480,7 +480,7 @@ Recommended lead time: 30 days minimum for breaking changes.
 
 ## Verification Strategy
 
-Silver uses this guide and the OpenAPI consumer spec to:
+OpenGovMail uses this guide and the OpenAPI consumer spec to:
 
 - validate bootstrap behavior in integration/setup tests,
 - detect schema and behavior drift,
@@ -488,9 +488,9 @@ Silver uses this guide and the OpenAPI consumer spec to:
 
 ## Ownership
 
-- Consumer: Silver team
+- Consumer: OpenGovMail team
 - Provider: Thunder team
-- Source of truth: docs folder and consumer OpenAPI spec in Silver repository
+- Source of truth: docs folder and consumer OpenAPI spec in OpenGovMail repository
 
 ## Versioning
 

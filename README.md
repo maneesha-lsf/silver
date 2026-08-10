@@ -2,9 +2,9 @@
 **_Modern Collaborative Email Platform_**
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
-![CI](https://img.shields.io/github/actions/workflow/status/LSFLK/silver/build-and-push-images.yml)
-![Security Scan](https://img.shields.io/github/actions/workflow/status/LSFLK/silver/trivy-fs.yml?label=security)
-![Last Commit](https://img.shields.io/github/last-commit/LSFLK/silver)
+![CI](https://img.shields.io/github/actions/workflow/status/OpenGovMail/OpenGovMail/build-and-push-images.yml)
+![Security Scan](https://img.shields.io/github/actions/workflow/status/OpenGovMail/OpenGovMail/trivy-fs.yml?label=security)
+![Last Commit](https://img.shields.io/github/last-commit/OpenGovMail/OpenGovMail)
 
 **OpenGovMail** aims to build a new kind of email and communication system that can work at a government scale. The goal is to make email faster, smarter, and easier to manage while keeping it secure and reliable. The platform will evolve in two stages: Version 1.0 delivers reliable, standards-compliant email, while Version 2.0 reimagines communication with modern collaboration at its core.
 
@@ -83,7 +83,7 @@ cd OpenGovMail
 ```
 
 ### Configuration
-- Open [`silver.yaml`](https://github.com/OpenGovMail/OpenGovMail/blob/main/conf/silver.yaml) with a text editor.
+- Open [`opengovmail.yaml`](https://github.com/OpenGovMail/OpenGovMail/blob/main/conf/opengovmail.yaml) with a text editor.
 
 - Enter your domain name.
 
@@ -98,9 +98,9 @@ nano services/.env
 
 - Run `bash scripts/setup/setup.sh` to set up the configs.
 
-- Run `bash scripts/service/start-silver.sh` to start the mail server.
+- Run `bash scripts/service/start-opengovmail.sh` to start the mail server.
 
-- Replace the dkim record below with the output you get after running the `start-silver.sh` script
+- Replace the dkim record below with the output you get after running the `start-opengovmail.sh` script
 
 | DNS Record | Name            | Value                                                                                                                                                                                                                                                  |
 | ---------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -112,6 +112,7 @@ nano services/.env
 ### Adding users
 
 Users in OpenGovMail are provisioned through the [Thunder ID](https://github.com/thunder-id/thunderid) console that ships with the platform. Sign in to the console at `https://<your-domain>:8090/console` with your admin credentials.
+- To add more users to your email server, open up [`users.yaml`](https://github.com/OpenGovMail/OpenGovMail/blob/main/conf/users.yaml), and add their usernames and run the following command.
 
 For the full walkthrough — creating a user schema, assigning it to an organization unit, and adding users via direct password or invitation link — see [Adding Users](docs/Adding-Users.md).
 

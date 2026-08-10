@@ -8,10 +8,10 @@ set -euo pipefail
 # --- Paths ---
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-readonly SILVER_YAML_FILE="${ROOT_DIR}/../conf/silver.yaml"
-readonly CONFIGS_PATH="${ROOT_DIR}/silver-config/opendkim"
+readonly OPENGOVMAIL_YAML_FILE="${ROOT_DIR}/../conf/opengovmail.yaml"
+readonly CONFIGS_PATH="${ROOT_DIR}/opengovmail-config/opendkim"
 
-# --- Helper: Extract domain configs from silver.yaml ---
+# --- Helper: Extract domain configs from opengovmail.yaml ---
 extract_domain_configs() {
     awk '
     /^[[:space:]]*-[[:space:]]*domain:/ {
@@ -46,7 +46,7 @@ extract_domain_configs() {
         }
         if (domain != "" && domain != "null") { print domain "," selector "," keysize }
     }
-    ' "$SILVER_YAML_FILE"
+    ' "$OPENGOVMAIL_YAML_FILE"
 }
 
 # --- Main ---
@@ -54,7 +54,7 @@ echo "=== Generating OpenDKIM configuration files for all domains and subdomains
 
 DOMAIN_CONFIGS=$(extract_domain_configs)
 if [ -z "$DOMAIN_CONFIGS" ]; then
-    echo "Error: No domains found in ${SILVER_YAML_FILE}"
+    echo "Error: No domains found in ${OPENGOVMAIL_YAML_FILE}"
     exit 1
 fi
 

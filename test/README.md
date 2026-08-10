@@ -1,6 +1,6 @@
-### Load Testing Silver Mail Service
+### Load Testing OpenGovMail Mail Service
 
-This directory contains files and scripts for load testing the Silver Mail Service. It includes test data, configuration files, and scripts to simulate user interactions with the service.
+This directory contains files and scripts for load testing the OpenGovMail Mail Service. It includes test data, configuration files, and scripts to simulate user interactions with the service.
 
 #### Contents
 1. ./test_data - Directory containing sample data files used for testing and user simulation and attachment files.

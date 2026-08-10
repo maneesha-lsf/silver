@@ -30,7 +30,7 @@ env:
   # EXTERNAL_SERVER_USER: Set this in GitHub repository settings (e.g., root)
   # EXTERNAL_SERVER_PASSWORD: Set this in GitHub Secrets
   # EXTERNAL_SERVER_PORT: Set this in GitHub repository settings (default: 22)
-  DEPLOY_PATH: /root/silver/
+  DEPLOY_PATH: /root/opengovmail/
 
 jobs:
   check-connection-vars:
@@ -74,7 +74,7 @@ jobs:
             echo "⚠️  External server deployment is not configured (missing host/user)"
           fi
 
-  check-silver-folder:
+  check-opengovmail-folder:
     name: Create Test Users
     needs: check-connection-vars
     if: needs.check-connection-vars.outputs.should_deploy == 'true'
@@ -108,7 +108,7 @@ jobs:
           ssh -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER }}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               # Create test data directory if it doesn't exist
               mkdir -p ${{ env.DEPLOY_PATH }}/test/load/test_data
@@ -148,7 +148,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH
@@ -162,7 +162,7 @@ jobs:
               -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER }}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               # Create test data directory if it doesn't exist
               mkdir -p ${{ env.DEPLOY_PATH }}/test/load/test_data
@@ -203,14 +203,14 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH
 
   run-load-tests:
     name: Run Load Tests
-    needs: [check-connection-vars, check-silver-folder]
+    needs: [check-connection-vars, check-opengovmail-folder]
     runs-on: ubuntu-latest
     environment: 
       name: ${{ github.event.inputs.target_environment || 'production' }}
@@ -241,7 +241,7 @@ jobs:
           ssh -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER }}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               # Navigate to load test directory
               cd ${{ env.DEPLOY_PATH }}/test/load
@@ -435,7 +435,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH
@@ -449,7 +449,7 @@ jobs:
               -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER}}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               # Navigate to load test directory
               cd ${{ env.DEPLOY_PATH }}/test/load
@@ -643,7 +643,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH
@@ -682,7 +682,7 @@ jobs:
           ssh -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER }}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               if [ -f "${{ env.DEPLOY_PATH }}/scripts/user/remove_test_users.sh" ]; then
                 cd ${{ env.DEPLOY_PATH }}/scripts/user
@@ -723,7 +723,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH
@@ -737,7 +737,7 @@ jobs:
               -p ${{ secrets.EXTERNAL_SERVER_PORT || '22' }} \
               ${{ secrets.EXTERNAL_SERVER_USER }}@${{ secrets.EXTERNAL_SERVER_HOST }} << 'ENDSSH'
             if [ -d "${{ env.DEPLOY_PATH }}" ]; then
-              echo "✅ Silver folder exists at ${{ env.DEPLOY_PATH }}"
+              echo "✅ OpenGovMail folder exists at ${{ env.DEPLOY_PATH }}"
               
               if [ -f "${{ env.DEPLOY_PATH }}/scripts/user/remove_test_users.sh" ]; then
                 cd ${{ env.DEPLOY_PATH }}/scripts/user
@@ -778,7 +778,7 @@ jobs:
                 exit 1
               fi
             else
-              echo "❌ Silver folder does not exist at ${{ env.DEPLOY_PATH }}"
+              echo "❌ OpenGovMail folder does not exist at ${{ env.DEPLOY_PATH }}"
               exit 1
             fi
           ENDSSH

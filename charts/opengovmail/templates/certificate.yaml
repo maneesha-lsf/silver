@@ -1,0 +1,22 @@
+{{- if .Values.global.tls.enabled }}
+{{- $domains := .Values.global.tls.domains | default (list (include "opengovmail.mailHostname" .) (include "opengovmail.domain" .)) }}
+{{- range $domains }}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ . | replace "." "-" }}-tls
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    {{- include "opengovmail.labels" $ | nindent 4 }}
+spec:
+  secretName: {{ . | replace "." "-" }}-tls
+  issuerRef:
+    name: {{ $.Values.global.tls.issuer }}
+    kind: ClusterIssuer
+  commonName: {{ . }}
+  dnsNames:
+    - {{ . }}
+  renewBefore: {{ $.Values.global.tls.renewBefore | default "720h" }}
+{{- end }}
+{{- end }}

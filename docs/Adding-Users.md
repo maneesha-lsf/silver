@@ -1,10 +1,10 @@
 # Adding Users
 
-Users in Silver are provisioned through the [Thunder ID](https://github.com/thunder-id/thunderid) console that ships with the platform. This guide walks through adding users via the console.
+Users in OpenGovMail are provisioned through the [Thunder ID](https://github.com/thunder-id/thunderid) console that ships with the platform. This guide walks through adding users via the console.
 
 ## Prerequisites
 
-- Silver is running (see [Server Setup](../README.md#server-setup) in the main README).
+- OpenGovMail is running (see [Server Setup](../README.md#server-setup) in the main README).
 - You can reach the Thunder console at `https://<your-domain>:8090/console`.
 - You have Thunder admin credentials.
 

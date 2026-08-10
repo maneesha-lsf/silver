@@ -1,7 +1,7 @@
 .PHONY: build run clean docker-build
 
 BINARY_NAME=metadata-service
-DOCKER_IMAGE=silver-metadata-service
+DOCKER_IMAGE=opengovmail-metadata-service
 
 build:
 	go build -o $(BINARY_NAME) main.go

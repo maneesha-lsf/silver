@@ -12,7 +12,7 @@
 #   thunder_authenticate "$THUNDER_HOST" "$THUNDER_PORT"
 #   # Now you can use: $DEVELOP_APP_ID, $BEARER_TOKEN
 #
-#   thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "silver"
+#   thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "opengovmail"
 #   # Now you can use: $ORG_UNIT_ID
 #
 
@@ -147,7 +147,7 @@ thunder_authenticate() {
 #   $1 - Thunder host (e.g., "example.com")
 #   $2 - Thunder port (e.g., "8090")
 #   $3 - Bearer token
-#   $4 - Organization handle (e.g., "silver")
+#   $4 - Organization handle (e.g., "opengovmail")
 # Returns:
 #   0 on success, 1 on failure
 # Exports:

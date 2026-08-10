@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-#  Silver Mail - Manage Role Assignments
+#  OpenGovMail Mail - Manage Role Assignments
 # ============================================
 #
 # This script allows you to:

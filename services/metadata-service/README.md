@@ -1,4 +1,4 @@
-# Silver Metadata Service
+# OpenGovMail Metadata Service
 
 A Go service that sends ClamAV signature heartbeat data to the Super Platform.
 
@@ -15,7 +15,7 @@ A Go service that sends ClamAV signature heartbeat data to the Super Platform.
 
 Edit `.env` file:
 ```bash
-EXTERNAL_API_URL=https://your-super-platform.com/v1/silver/events
+EXTERNAL_API_URL=https://your-super-platform.com/v1/opengovmail/events
 API_KEY=your-secret-api-key-here
 PUSH_INTERVAL_SECONDS=60
 ```
@@ -23,13 +23,13 @@ PUSH_INTERVAL_SECONDS=60
 ### 2. Deploy
 
 ```bash
-docker-compose up -d silver-metadata
+docker-compose up -d opengovmail-metadata
 ```
 
 ### 3. Check Logs
 
 ```bash
-docker-compose logs -f silver-metadata
+docker-compose logs -f opengovmail-metadata
 ```
 
 You should see:
@@ -108,7 +108,7 @@ curl -X POST http://localhost:8888/api/results \
 
 ### Using Docker
 ```bash
-docker-compose up -d silver-metadata
+docker-compose up -d opengovmail-metadata
 ```
 
 ### Using Makefile
@@ -129,7 +129,7 @@ go build -o metadata-service main.go
 **No heartbeats being sent?**
 1. Check `EXTERNAL_API_URL` is set correctly
 2. Verify `ENABLE_PUSH_SERVICE=true`
-3. Check logs: `docker-compose logs silver-metadata`
+3. Check logs: `docker-compose logs opengovmail-metadata`
 
 **Instance ID showing "unknown"?**
 - Network connectivity issue

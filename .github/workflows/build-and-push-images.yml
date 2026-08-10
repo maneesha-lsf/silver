@@ -8,12 +8,12 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: lsflk/silver
+  IMAGE_PREFIX: OpenGovMail/opengovmail
 
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
-    if: github.repository == 'lsflk/silver'
+    if: github.repository == 'OpenGovMail/OpenGovMail'
     outputs:
       smtp: ${{ steps.changes.outputs.smtp }}
       imap: ${{ steps.changes.outputs.imap }}

@@ -10,18 +10,18 @@ services:
     build:
       context: .
       dockerfile: ./smtp/Dockerfile
-    image: silver-smtp:local
+    image: opengovmail-smtp:local
 
   # Uncomment if you're also developing the DKIM server
   # opendkim:
   #   build:
   #     context: .
   #     dockerfile: ./dkim/Dockerfile
-  #   image: silver-dkim:local
+  #   image: opengovmail-dkim:local
 
   # Uncomment if you're also developing the Certbot server
   # certbot:
   #   build:
   #     context: ./certbot
   #     dockerfile: ./Dockerfile
-  #   image: silver-certbot:local
+  #   image: opengovmail-certbot:local

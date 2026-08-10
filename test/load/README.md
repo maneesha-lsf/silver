@@ -1,6 +1,6 @@
 # 📊 Load Testing Suite
 
-This directory contains the load testing suite for the Silver Mail Server using [Locust](https://locust.io/). The tests simulate real-world email traffic patterns including SMTP sending and IMAP operations.
+This directory contains the load testing suite for the OpenGovMail Mail Server using [Locust](https://locust.io/). The tests simulate real-world email traffic patterns including SMTP sending and IMAP operations.
 
 ## 📁 Files Overview
 
@@ -18,12 +18,12 @@ This directory contains the load testing suite for the Silver Mail Server using 
 ### Prerequisites
 
 1. Python 3.8 or higher
-2. Silver Mail Server running and accessible
+2. OpenGovMail Mail Server running and accessible
 
 ### Step 1: Create Test Users
 
 > [!NOTE]
-> The code snippet in this section(Step 1) should be run in the server environment where your Silver Mail Server and Thunder IDP are running.
+> The code snippet in this section(Step 1) should be run in the server environment where your OpenGovMail Mail Server and Thunder IDP are running.
 
 Before running any load tests, you must create test users first:
 
@@ -206,5 +206,5 @@ The `locust.log` file contains detailed logs of the test execution, useful for d
 For issues or questions:
 1. Check the log files (`locust.log`)
 2. Review the test/load test results
-3. Consult the Silver Mail documentation
+3. Consult the OpenGovMail Mail documentation
 4. Open an issue in the repository

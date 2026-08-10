@@ -1,6 +1,6 @@
 # Interesting Email Products to Emerge Recently
 
-(People working on silver should dog-food these)
+(People working on OpenGovMail should dog-food these)
 
 ## 1. Superhuman
 

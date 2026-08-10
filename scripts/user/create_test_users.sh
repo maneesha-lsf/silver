@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # ============================================
-#  Silver Mail - Generate Test Users Script
+#  OpenGovMail Mail - Generate Test Users Script
 # ============================================
 # This script generates 100 random test users, adds them to Thunder and shared.db,
 # and saves their credentials to a CSV file.
-# Domain is automatically read from conf/silver.yaml
+# Domain is automatically read from conf/opengovmail.yaml
 
 # -------------------------------
 # Configuration
@@ -22,7 +22,7 @@ NC="\033[0m" # No Color
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVICES_DIR="$(cd "${SCRIPT_DIR}/../../services" && pwd)"
 CONF_DIR="$(cd "${SCRIPT_DIR}/../../conf" && pwd)"
-CONFIG_FILE="${CONF_DIR}/silver.yaml"
+CONFIG_FILE="${CONF_DIR}/opengovmail.yaml"
 OUTPUT_DIR="${SCRIPT_DIR}/test_users"
 CREDENTIALS_FILE="${OUTPUT_DIR}/test_users_credentials.csv"
 
@@ -50,14 +50,14 @@ generate_username() {
     printf "%s%03d" "$prefix" "$index"
 }
 
-# Extract domain from silver.yaml
+# Extract domain from opengovmail.yaml
 get_domain_from_config() {
     if [ ! -f "$CONFIG_FILE" ]; then
         echo -e "${RED}✗ Configuration file not found: $CONFIG_FILE${NC}"
         exit 1
     fi
     
-    # Extract the first domain from the domains array in silver.yaml
+    # Extract the first domain from the domains array in opengovmail.yaml
     # Look for pattern: "- domain: example.com" or "  - domain: example.com"
     local domain=$(grep -m 1 '^\s*-\s*domain:' "$CONFIG_FILE" | sed 's/.*domain:\s*//' | xargs)
     
@@ -164,7 +164,7 @@ ensure_domain_exists() {
 # -------------------------------
 
 echo -e "${CYAN}==============================================${NC}"
-echo -e " 🚀 ${GREEN}Silver Mail - Test User Generator${NC}"
+echo -e " 🚀 ${GREEN}OpenGovMail Mail - Test User Generator${NC}"
 echo -e "${CYAN}==============================================${NC}\n"
 
 # Get domain from config file
@@ -188,8 +188,8 @@ if ! thunder_authenticate "$THUNDER_HOST" "$THUNDER_PORT"; then
     exit 1
 fi
 
-# Get organization unit ID for "silver"
-if ! thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "silver"; then
+# Get organization unit ID for "opengovmail"
+if ! thunder_get_org_unit "$THUNDER_HOST" "$THUNDER_PORT" "$BEARER_TOKEN" "opengovmail"; then
     exit 1
 fi
 

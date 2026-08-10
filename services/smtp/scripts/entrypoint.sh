@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-CONFIG_FILE="/etc/postfix/silver.yaml"
+CONFIG_FILE="/etc/postfix/opengovmail.yaml"
 
 # Extract primary (first) domain from the domains list using awk
 MAIL_DOMAIN=$(awk '/^[[:space:]]*-[[:space:]]*domain:/ {sub(/^[[:space:]]*-[[:space:]]*domain:[[:space:]]*/, ""); print; exit}' "$CONFIG_FILE")
@@ -9,7 +9,7 @@ MAIL_DOMAIN=$(awk '/^[[:space:]]*-[[:space:]]*domain:/ {sub(/^[[:space:]]*-[[:sp
 # Fallback if extraction failed
 if [ -z "$MAIL_DOMAIN" ] || [ "$MAIL_DOMAIN" = "null" ]; then
     echo "⚠️  Warning: Could not extract domain from $CONFIG_FILE"
-    echo "⚠️  Please ensure silver.yaml has domains configured"
+    echo "⚠️  Please ensure opengovmail.yaml has domains configured"
     MAIL_DOMAIN="example.org"
 fi
 
